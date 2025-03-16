@@ -1,46 +1,50 @@
 package com.example.fuelmanager.controller;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.List;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.fuelmanager.entity.FuelRecord;
 import com.example.fuelmanager.entity.User;
-import com.example.fuelmanager.entity.Vehicle;
-import com.example.fuelmanager.service.UserService;
-import com.example.fuelmanager.service.VehicleService;
+import com.example.fuelmanager.service.FuelRecordService;
 
 @Controller
+@RequestMapping("/fuel-management")
 public class FuelManagementController {
 
-	private final VehicleService vehicleService;
-	private final UserService userService;
+	private final FuelRecordService fuelRecordService;
 
-	public FuelManagementController(VehicleService vehicleService, UserService userService) {
-		this.vehicleService = vehicleService;
-		this.userService = userService;
+	public FuelManagementController(FuelRecordService fuelRecordService) {
+		this.fuelRecordService = fuelRecordService;
 	}
 
-	@GetMapping("/fuel-management/{vehicleId}")
-	public String manageFuel(@PathVariable Long vehicleId, Model model) {
-		Vehicle vehicle = vehicleService.findById(vehicleId);
-		if (vehicle == null) {
-			return "error/404"; // 車両が存在しない場合のエラーページ
-		}
-
-		// ログインユーザーを取得
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String username = auth.getName();
-		User loggedInUser = userService.findByUsername(username);
-
-		// 車両の所有者チェック
-		if (!vehicle.getUser().getId().equals(loggedInUser.getId())) {
-			return "error/403"; // 他人の車両にアクセスしようとした場合
-		}
-
-		model.addAttribute("vehicle", vehicle);
-		return "vehicle/fuel-management";
+	// 📌 給油データを登録
+	@PostMapping("/add")
+	public String addFuelRecord(@RequestParam Long vehicleId,
+			@RequestParam double odometer,
+			@RequestParam double fuelAmount,
+			@AuthenticationPrincipal User user) {
+		fuelRecordService.addFuelRecord(vehicleId, odometer, fuelAmount, user);
+		return "redirect:/fuel-management/" + vehicleId;
 	}
+
+	// ⛽ 燃費を計算して表示
+	@GetMapping("/{vehicleId}")
+	public String showFuelEfficiency(@PathVariable Long vehicleId, Model model) {
+		double fuelEfficiency = fuelRecordService.calculateFuelEfficiency(vehicleId);
+		List<FuelRecord> fuelRecords = fuelRecordService.getFuelRecords(vehicleId);
+
+		model.addAttribute("fuelEfficiency", fuelEfficiency);
+		model.addAttribute("fuelRecords", fuelRecords);
+		model.addAttribute("vehicleId", vehicleId);
+		return "fuel-management";
+	}
+
 }

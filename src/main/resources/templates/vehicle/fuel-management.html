@@ -2,17 +2,116 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+	<meta charset="UTF-8">
 	<title>燃費管理</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			padding: 20px;
+		}
+
+		.container {
+			max-width: 600px;
+			margin: auto;
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 20px;
+		}
+
+		th,
+		td {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: #f4f4f4;
+		}
+
+		.form-group {
+			margin: 10px 0;
+		}
+
+		label {
+			font-weight: bold;
+		}
+
+		input[type="number"],
+		input[type="date"] {
+			width: 100%;
+			padding: 8px;
+			margin-top: 5px;
+		}
+
+		button {
+			background-color: #007bff;
+			color: white;
+			padding: 10px;
+			border: none;
+			width: 100%;
+		}
+
+		button:hover {
+			background-color: #0056b3;
+		}
+	</style>
 </head>
 
 <body>
-	<h2>燃費管理</h2>
-	<h3 th:text="${vehicle.name}"></h3>
 
-	<p>ここに燃費管理の情報を追加していきます。</p>
+	<div class="container">
+		<h1>燃費管理</h1>
 
-	<br />
-	<a href="/home">ホームに戻る</a>
+		<!-- 🚗 燃費表示 -->
+		<h2>最新の燃費</h2>
+		<p><strong>燃費 (km/L): </strong> <span th:text="${fuelEfficiency} ?: 'データなし'"></span></p>
+
+		<!-- ⛽ 給油データ登録フォーム -->
+		<h2>給油データの登録</h2>
+		<form th:action="@{/fuel-management/add}" method="post">
+			<input type="hidden" name="vehicleId" th:value="${vehicleId}" />
+
+			<div class="form-group">
+				<label for="odometer">ODOメーター (km)</label>
+				<input type="number" id="odometer" name="odometer" step="0.1" required />
+			</div>
+
+			<div class="form-group">
+				<label for="fuelAmount">給油量 (L)</label>
+				<input type="number" id="fuelAmount" name="fuelAmount" step="0.1" required />
+			</div>
+
+			<button type="submit">給油データを登録</button>
+		</form>
+
+		<!-- ⛽ 給油履歴 -->
+		<h2>給油履歴</h2>
+		<table>
+			<thead>
+				<tr>
+					<th>日付</th>
+					<th>ODO (km)</th>
+					<th>給油量 (L)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="record : ${fuelRecords}">
+					<td th:text="${record.refuelDate}"></td>
+					<td th:text="${record.odometer}"></td>
+					<td th:text="${record.fuelAmount}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
 </body>
 
 </html>
