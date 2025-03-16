@@ -31,7 +31,7 @@ public class SecurityConfig {
 		http
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/", "/login", "/register").permitAll() // 誰でもアクセス可能
-						.requestMatchers("/vehicle/register", "/home").authenticated() // ログイン必須
+						.requestMatchers("/vehicle/register", "/home", "/fuel-management/**").authenticated() // ログイン必須
 				)
 				.formLogin(form -> form
 						.loginPage("/login")

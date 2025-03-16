@@ -31,8 +31,6 @@ public class HomeController {
 
 		// ユーザーに紐づく車両を取得
 		List<Vehicle> vehicles = vehicleService.findByUser(user);
-
-		// Model に追加
 		model.addAttribute("vehicles", vehicles);
 
 		return "home";

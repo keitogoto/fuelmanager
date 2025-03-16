@@ -10,7 +10,9 @@
 
 	<h3>登録済みの車両</h3>
 	<ul>
-		<li th:each="vehicle : ${vehicles}" th:text="${vehicle.name}"></li>
+		<li th:each="vehicle : ${vehicles}">
+			<a th:href="@{/fuel-management/{id}(id=${vehicle.id})}" th:text="${vehicle.name}"></a>
+		</li>
 	</ul>
 	<p th:if="${vehicles.isEmpty()}">車両が登録されていません。</p>
 
