@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>車両登録</title>
+</head>
+
+<body>
+	<h2>車両登録</h2>
+	<form th:action="@{/vehicle/register}" method="post" th:object="${vehicle}">
+		<label>車両名:</label>
+		<input type="text" th:field="*{name}" required />
+		<br />
+		<label>モデル:</label>
+		<input type="text" th:field="*{model}" required />
+		<br />
+		<label>メーカー:</label>
+		<input type="text" th:field="*{manufacturer}" required />
+		<br />
+		<label>年式:</label>
+		<input type="number" th:field="*{year}" required />
+		<br />
+		<label>ODOメーター（走行距離）:</label>
+		<input type="number" th:field="*{odoMeter}" required />
+		<br />
+		<button type="submit">登録</button>
+	</form>
+</body>
+
+</html>
