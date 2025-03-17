@@ -10,9 +10,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "fuel_records")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class FuelRecord {
 
 	@Id
@@ -30,66 +38,24 @@ public class FuelRecord {
 	private double fuelAmount; // 給油量
 
 	@Column(nullable = false)
-	private LocalDate refuelDate; // 給油日
+	private double fuelEconomy; // 燃費
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	// --- コンストラクタ ---
-	public FuelRecord() {
-	}
+	@Column(nullable = false)
+	private LocalDate refuelDate; // 給油日
 
-	public FuelRecord(Vehicle vehicle, double odometer, double fuelAmount, LocalDate refuelDate, User user) {
+	// ✅ id なしのコンストラクタを手動追加
+	public FuelRecord(Vehicle vehicle, double odometer, double fuelAmount, double fuelEconomy, User user,
+			LocalDate refuelDate) {
 		this.vehicle = vehicle;
 		this.odometer = odometer;
 		this.fuelAmount = fuelAmount;
-		this.refuelDate = refuelDate;
+		this.fuelEconomy = fuelEconomy;
 		this.user = user;
-	}
-
-	// --- Getter & Setter ---
-	public Long getId() {
-		return id;
-	}
-
-	public Vehicle getVehicle() {
-		return vehicle;
-	}
-
-	public void setVehicle(Vehicle vehicle) {
-		this.vehicle = vehicle;
-	}
-
-	public double getOdometer() {
-		return odometer;
-	}
-
-	public void setOdometer(double odometer) {
-		this.odometer = odometer;
-	}
-
-	public double getFuelAmount() {
-		return fuelAmount;
-	}
-
-	public void setFuelAmount(double fuelAmount) {
-		this.fuelAmount = fuelAmount;
-	}
-
-	public LocalDate getRefuelDate() {
-		return refuelDate;
-	}
-
-	public void setRefuelDate(LocalDate refuelDate) {
 		this.refuelDate = refuelDate;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
 }

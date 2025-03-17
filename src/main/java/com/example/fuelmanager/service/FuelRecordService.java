@@ -12,16 +12,14 @@ import com.example.fuelmanager.entity.Vehicle;
 import com.example.fuelmanager.repository.FuelRecordRepository;
 import com.example.fuelmanager.repository.VehicleRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class FuelRecordService {
 
 	private final FuelRecordRepository fuelRecordRepository;
 	private final VehicleRepository vehicleRepository;
-
-	public FuelRecordService(FuelRecordRepository fuelRecordRepository, VehicleRepository vehicleRepository) {
-		this.fuelRecordRepository = fuelRecordRepository;
-		this.vehicleRepository = vehicleRepository;
-	}
 
 	// 🚗 給油データを登録
 	@Transactional
@@ -29,7 +27,8 @@ public class FuelRecordService {
 		Vehicle vehicle = vehicleRepository.findById(vehicleId)
 				.orElseThrow(() -> new IllegalArgumentException("車両が見つかりません"));
 
-		FuelRecord record = new FuelRecord(vehicle, odometer, fuelAmount, LocalDate.now(), user);
+		double fuelEconomy = calculateFuelEfficiency(vehicleId); // 燃費を計算
+		FuelRecord record = new FuelRecord(vehicle, odometer, fuelAmount, fuelEconomy, user, LocalDate.now());
 		fuelRecordRepository.save(record);
 	}
 
@@ -52,5 +51,4 @@ public class FuelRecordService {
 	public List<FuelRecord> getFuelRecords(Long vehicleId) {
 		return fuelRecordRepository.findByVehicleIdOrderByRefuelDateDesc(vehicleId);
 	}
-
 }
