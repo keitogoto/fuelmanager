@@ -32,7 +32,7 @@ public class FuelManagementController {
 	// 📌 給油データを登録
 	@PostMapping("/add")
 	public String addFuelRecord(@RequestParam Long vehicleId,
-			@RequestParam double odometer,
+			@RequestParam int odometer,
 			@RequestParam double fuelAmount) {
 
 		// 🔍 認証情報から現在のユーザー名を取得
@@ -56,8 +56,12 @@ public class FuelManagementController {
 	public String showFuelEfficiency(@PathVariable Long vehicleId, Model model) {
 		double fuelEfficiency = fuelRecordService.calculateFuelEfficiency(vehicleId);
 		List<FuelRecord> fuelRecords = fuelRecordService.getFuelRecords(vehicleId);
-
+		
+		FuelRecord latestRecord = fuelRecordService.getLatestFuelRecord(vehicleId);
+		Double latestFuelEconomy = (latestRecord != null) ? latestRecord.getFuelEconomy() : null;
+		
 		model.addAttribute("fuelEfficiency", fuelEfficiency);
+		model.addAttribute("latestFuelEconomy", latestFuelEconomy);
 		model.addAttribute("fuelRecords", fuelRecords);
 		model.addAttribute("vehicleId", vehicleId);
 		return "vehicle/fuel-management";

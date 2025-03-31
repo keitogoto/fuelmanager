@@ -8,4 +8,7 @@ import com.example.fuelmanager.entity.FuelRecord;
 
 public interface FuelRecordRepository extends JpaRepository<FuelRecord, Long> {
 	List<FuelRecord> findByVehicleIdOrderByRefuelDateDesc(Long vehicleId);
+	
+	FuelRecord findTopByVehicleIdOrderByRefuelDateDesc(Long vehicleId);
+
 }

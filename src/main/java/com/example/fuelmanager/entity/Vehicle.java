@@ -24,7 +24,7 @@ public class Vehicle {
 	private String model; // モデル
 	private String manufacturer; // メーカー
 	private int year; // 年式
-	private int odoMeter; // 初期ODOメーター（走行距離）
+	private int odometer; // 初期ODOメーター（走行距離）
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)

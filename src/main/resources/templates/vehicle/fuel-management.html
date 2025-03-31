@@ -72,7 +72,10 @@
 
 		<!-- 🚗 燃費表示 -->
 		<h2>最新の燃費</h2>
-		<p><strong>燃費 (km/L): </strong> <span th:text="${fuelEfficiency} ?: 'データなし'"></span></p>
+		<p><strong>最新の燃費 (km/L): </strong> <span th:text="${latestFuelEconomy} ?: 'データなし'"></span></p>
+		
+		<h2>平均燃費</h2>
+		<p><strong>平均 (km/L): </strong> <span th:text="${fuelEfficiency} ?: 'データなし'"></span></p>
 
 		<!-- ⛽ 給油データ登録フォーム -->
 		<h2>給油データの登録</h2>
@@ -81,7 +84,7 @@
 
 			<div class="form-group">
 				<label for="odometer">ODOメーター (km)</label>
-				<input type="number" id="odometer" name="odometer" step="0.1" required />
+				<input type="number" id="odometer" name="odometer" step="1" required />
 			</div>
 
 			<div class="form-group">
@@ -100,6 +103,7 @@
 					<th>日付</th>
 					<th>ODO (km)</th>
 					<th>給油量 (L)</th>
+					<th>燃費（km/L)</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -107,6 +111,7 @@
 					<td th:text="${record.refuelDate}"></td>
 					<td th:text="${record.odometer}"></td>
 					<td th:text="${record.fuelAmount}"></td>
+					<td th:text="${record.fuelEconomy}"></td>
 				</tr>
 			</tbody>
 		</table>
